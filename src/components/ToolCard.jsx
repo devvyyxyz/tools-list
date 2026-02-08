@@ -3,43 +3,43 @@ import { formatNumber, formatDate } from '../utils/formatting.js'
 const ToolCard = ({ repo, onSelect, onToggleCompare, isCompared }) => {
   return (
     <div className="glass-panel flex h-full flex-col gap-4 p-5">
-      <div className="flex items-start justify-between gap-4">
-        <div className="space-y-1">
-          <div className="flex flex-wrap items-center gap-2">
-            <a
-              href={repo.html_url}
-              target="_blank"
-              rel="noreferrer"
-              className="text-lg font-semibold text-indigo-600 hover:underline"
-            >
-              {repo.name}
-            </a>
-            {repo.archived && (
-              <span className="rounded-full bg-amber-100 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-amber-700">
-                Archived
-              </span>
-            )}
-            {repo.is_template && (
-              <span className="rounded-full bg-green-100 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-green-700">
-                Template
-              </span>
-            )}
-          </div>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            {repo.full_name}
-          </p>
+      <div className="space-y-2">
+        <div className="flex items-start justify-between gap-4">
+          <a
+            href={repo.html_url}
+            target="_blank"
+            rel="noreferrer"
+            className="flex-1 text-lg font-semibold text-indigo-600 hover:underline"
+          >
+            {repo.name}
+          </a>
+          <button
+            type="button"
+            onClick={() => onToggleCompare(repo)}
+            className={`flex-none rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-wide ${
+              isCompared
+                ? 'border-indigo-500 bg-indigo-500 text-white'
+                : 'border-slate-200 text-slate-500 dark:border-slate-800 dark:text-slate-300'
+            }`}
+          >
+            {isCompared ? 'Selected' : 'Compare'}
+          </button>
         </div>
-        <button
-          type="button"
-          onClick={() => onToggleCompare(repo)}
-          className={`rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-wide ${
-            isCompared
-              ? 'border-indigo-500 bg-indigo-500 text-white'
-              : 'border-slate-200 text-slate-500 dark:border-slate-800 dark:text-slate-300'
-          }`}
-        >
-          {isCompared ? 'Selected' : 'Compare'}
-        </button>
+        <p className="text-xs text-slate-500 dark:text-slate-400">
+          {repo.full_name}
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {repo.archived && (
+            <span className="rounded-full bg-amber-100 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-amber-700">
+              Archived
+            </span>
+          )}
+          {repo.is_template && (
+            <span className="rounded-full bg-green-100 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-green-700">
+              Template
+            </span>
+          )}
+        </div>
       </div>
 
       <p className="text-sm text-slate-600 dark:text-slate-300">
