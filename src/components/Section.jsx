@@ -16,7 +16,11 @@ const Section = ({ title, count, children }) => {
           <span className="text-lg">{collapsed ? '＋' : '－'}</span>
         </span>
       </button>
-      {!collapsed && <div className="grid gap-4 md:grid-cols-2">{children}</div>}
+      {!collapsed && (
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {children}
+        </div>
+      )}
     </section>
   )
 }
