@@ -23,3 +23,22 @@ export const filterByDenylist = (repos, denylist = []) => {
     (repo) => !normalized.includes(String(repo.full_name || '').toLowerCase()),
   )
 }
+
+export const filterForks = (repos, forkAllowlist = []) => {
+  const normalized = forkAllowlist.map((item) => item.toLowerCase())
+  return repos.filter((repo) => {
+    const fullName = String(repo.full_name || '').toLowerCase()
+    if (repo.fork) {
+      return normalized.includes(fullName)
+    }
+    return true
+  })
+}
+
+export const filterByOwner = (repos, ownerLogin) => {
+  if (!ownerLogin) return repos
+  const normalized = ownerLogin.toLowerCase()
+  return repos.filter(
+    (repo) => String(repo.owner?.login || '').toLowerCase() === normalized,
+  )
+}

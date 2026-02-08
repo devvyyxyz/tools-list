@@ -9,7 +9,13 @@ import BackToTop from '../components/BackToTop.jsx'
 import { useStarredRepos } from '../hooks/useStarredRepos.js'
 import { useRepoLanguages } from '../hooks/useRepoLanguages.js'
 import { useRepoContributors } from '../hooks/useRepoContributors.js'
-import { filterByDenylist, filterBySearch, filterByTags } from '../utils/filtering.js'
+import {
+  filterByDenylist,
+  filterBySearch,
+  filterByTags,
+  filterForks,
+  filterByOwner,
+} from '../utils/filtering.js'
 import { sortRepos } from '../utils/sorting.js'
 
 const Home = () => {
@@ -45,7 +51,15 @@ const Home = () => {
       .split(',')
       .map((item) => item.trim())
       .filter(Boolean)
-    const allowed = filterByDenylist(data, denylist)
+    const forkAllowlist = (import.meta.env.VITE_FORK_ALLOWLIST || '')
+      .split(',')
+      .map((item) => item.trim())
+      .filter(Boolean)
+    const ownerLogin = import.meta.env.VITE_GITHUB_USERNAME || ''
+    const allowed = filterByOwner(
+      filterForks(filterByDenylist(data, denylist), forkAllowlist),
+      ownerLogin,
+    )
     const searched = filterBySearch(allowed, search)
     const tagged = filterByTags(searched, activeTags)
     return sortRepos(tagged, sortKey)
