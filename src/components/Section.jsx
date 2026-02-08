@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { MdExpandMore, MdExpandLess } from 'react-icons/md'
 
 const Section = ({ title, count, children, defaultCollapsed = false }) => {
   const [collapsed, setCollapsed] = useState(defaultCollapsed)
@@ -13,14 +14,16 @@ const Section = ({ title, count, children, defaultCollapsed = false }) => {
         <span>{title}</span>
         <span className="flex items-center gap-3 text-xs font-medium text-slate-400">
           {count} tools
-          <span className="text-lg">{collapsed ? '＋' : '－'}</span>
+          {collapsed ? (
+            <MdExpandMore className="text-lg" />
+          ) : (
+            <MdExpandLess className="text-lg" />
+          )}
         </span>
       </button>
-      {!collapsed && (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {children}
-        </div>
-      )}
+      {!collapsed && <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        {children}
+      </div>}
     </section>
   )
 }

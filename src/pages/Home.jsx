@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { MdSearch } from 'react-icons/md'
 import Header from '../components/Header.jsx'
 import Section from '../components/Section.jsx'
 import ToolCard from '../components/ToolCard.jsx'
@@ -250,6 +251,20 @@ const Home = () => {
 
         {comparison.length > 0 && (
           <ComparisonPanel items={comparison} onRemove={handleRemoveCompare} />
+        )}
+
+        {sections.filter((section) => section.items.length > 0).length === 0 && (
+          <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 py-12 text-center dark:border-slate-800 dark:bg-slate-900">
+            <MdSearch className="text-4xl text-slate-400" />
+            <div>
+              <p className="text-lg font-semibold text-slate-700 dark:text-slate-200">
+                No results found
+              </p>
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                Try adjusting your search or filters.
+              </p>
+            </div>
+          </div>
         )}
 
         {sections

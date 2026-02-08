@@ -1,4 +1,5 @@
 import { useDarkMode } from '../hooks/useDarkMode.js'
+import { MdDarkMode, MdLightMode } from 'react-icons/md'
 
 const DarkModeToggle = () => {
   const { isDark, setIsDark } = useDarkMode()
@@ -9,7 +10,11 @@ const DarkModeToggle = () => {
       onClick={() => setIsDark((prev) => !prev)}
       className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
     >
-      <span className="text-base">{isDark ? '🌙' : '☀️'}</span>
+      {isDark ? (
+        <MdLightMode className="text-lg" />
+      ) : (
+        <MdDarkMode className="text-lg" />
+      )}
       <span>{isDark ? 'Dark' : 'Light'} mode</span>
     </button>
   )

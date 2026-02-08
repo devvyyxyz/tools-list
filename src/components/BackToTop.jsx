@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { MdArrowUpward } from 'react-icons/md'
 
 const BackToTop = () => {
   const [visible, setVisible] = useState(false)
@@ -19,10 +20,11 @@ const BackToTop = () => {
     <button
       type="button"
       onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-      className="fixed bottom-6 right-6 z-40 rounded-full border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-soft transition hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200"
+      className="fixed bottom-6 right-6 z-40 inline-flex items-center gap-1 rounded-full border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-soft transition hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200"
       aria-label="Back to top"
     >
-      ↑ Top
+      <MdArrowUpward className="text-base" />
+      <span>Top</span>
     </button>
   )
 }
