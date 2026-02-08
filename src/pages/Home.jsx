@@ -40,8 +40,10 @@ const Home = () => {
     enabled: Boolean(selectedRepo),
   })
 
-  const { allowedRepos, activeRepos, archivedRepos, tags } = useMemo(() => {
-    if (!data) return { allowedRepos: [], tags: [] }
+  const { activeRepos, archivedRepos, noTagRepos, tags } = useMemo(() => {
+    if (!data) {
+      return { activeRepos: [], archivedRepos: [], noTagRepos: [], tags: [] }
+    }
     const denylist = (import.meta.env.VITE_REPO_DENYLIST || '')
       .split(',')
       .map((item) => item.trim())
@@ -57,20 +59,28 @@ const Home = () => {
     )
     const active = allowed.filter((repo) => !repo.archived)
     const archived = allowed.filter((repo) => repo.archived)
-    const allTags = active.flatMap((repo) => repo.topics || [])
+    const noTags = active.filter((repo) => !(repo.topics || []).length)
+    const withTags = active.filter((repo) => (repo.topics || []).length)
+    const allTags = withTags.flatMap((repo) => repo.topics || [])
     return {
-      allowedRepos: allowed,
       activeRepos: active,
       archivedRepos: archived,
+      noTagRepos: noTags,
       tags: Array.from(new Set(allTags)).sort(),
     }
   }, [data])
 
   const filteredRepos = useMemo(() => {
-    const searched = filterBySearch(activeRepos, search)
+    const taggedRepos = activeRepos.filter((repo) => (repo.topics || []).length)
+    const searched = filterBySearch(taggedRepos, search)
     const tagged = filterByTags(searched, activeTags)
     return sortRepos(tagged, sortKey)
   }, [activeRepos, search, activeTags, sortKey])
+
+  const noTagsFiltered = useMemo(() => {
+    const searched = filterBySearch(noTagRepos, search)
+    return sortRepos(searched, sortKey)
+  }, [noTagRepos, search, sortKey])
 
   const archivedFiltered = useMemo(() => {
     const searched = filterBySearch(archivedRepos, search)
@@ -100,6 +110,14 @@ const Home = () => {
       },
     ]
 
+    if (noTagsFiltered.length) {
+      base.push({
+        id: 'no-tags',
+        title: 'Repos with no tags',
+        items: noTagsFiltered,
+      })
+    }
+
     if (archivedFiltered.length) {
       base.push({
         id: 'archived',
@@ -109,7 +127,7 @@ const Home = () => {
     }
 
     return base
-  }, [filteredRepos, archivedFiltered, groupByStatus, sortKey])
+  }, [filteredRepos, archivedFiltered, noTagsFiltered, groupByStatus, sortKey])
 
   const handleToggleTag = (tag) => {
     setActiveTags((prev) =>
