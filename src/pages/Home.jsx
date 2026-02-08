@@ -9,7 +9,7 @@ import BackToTop from '../components/BackToTop.jsx'
 import { useStarredRepos } from '../hooks/useStarredRepos.js'
 import { useRepoLanguages } from '../hooks/useRepoLanguages.js'
 import { useRepoContributors } from '../hooks/useRepoContributors.js'
-import { filterBySearch, filterByTags } from '../utils/filtering.js'
+import { filterByDenylist, filterBySearch, filterByTags } from '../utils/filtering.js'
 import { sortRepos } from '../utils/sorting.js'
 
 const Home = () => {
@@ -41,7 +41,12 @@ const Home = () => {
 
   const filteredRepos = useMemo(() => {
     if (!data) return []
-    const searched = filterBySearch(data, search)
+    const denylist = (import.meta.env.VITE_REPO_DENYLIST || '')
+      .split(',')
+      .map((item) => item.trim())
+      .filter(Boolean)
+    const allowed = filterByDenylist(data, denylist)
+    const searched = filterBySearch(allowed, search)
     const tagged = filterByTags(searched, activeTags)
     return sortRepos(tagged, sortKey)
   }, [data, search, activeTags, sortKey])

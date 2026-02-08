@@ -15,3 +15,11 @@ export const filterByTags = (repos, tags) => {
     return tags.every((tag) => topics.includes(tag))
   })
 }
+
+export const filterByDenylist = (repos, denylist = []) => {
+  if (!denylist.length) return repos
+  const normalized = denylist.map((item) => item.toLowerCase())
+  return repos.filter(
+    (repo) => !normalized.includes(String(repo.full_name || '').toLowerCase()),
+  )
+}
