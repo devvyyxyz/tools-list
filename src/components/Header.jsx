@@ -13,13 +13,13 @@ const Header = ({
 }) => {
   return (
     <header className="sticky top-0 z-20 border-b border-slate-200/70 bg-white/80 backdrop-blur dark:border-slate-800/70 dark:bg-slate-950/80">
-      <div className="mx-auto flex max-w-6xl flex-col gap-4 px-6 py-6">
-        <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="mx-auto flex max-w-6xl flex-col gap-3 px-6 py-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="text-sm font-semibold uppercase tracking-widest text-indigo-500">
               Developer Tools
             </p>
-            <h1 className="text-2xl font-semibold text-slate-900 dark:text-white">
+            <h1 className="text-xl font-semibold text-slate-900 dark:text-white">
               {title}
             </h1>
             {subtitle && (
