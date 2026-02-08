@@ -39,7 +39,7 @@ const Home = () => {
     enabled: Boolean(selectedRepo),
   })
 
-  const { allowedRepos, tags } = useMemo(() => {
+  const { allowedRepos, activeRepos, archivedRepos, tags } = useMemo(() => {
     if (!data) return { allowedRepos: [], tags: [] }
     const denylist = (import.meta.env.VITE_REPO_DENYLIST || '')
       .split(',')
@@ -54,28 +54,47 @@ const Home = () => {
       filterForks(filterByDenylist(data, denylist), forkAllowlist),
       ownerLogin,
     )
-    const allTags = allowed.flatMap((repo) => repo.topics || [])
+    const active = allowed.filter((repo) => !repo.archived)
+    const archived = allowed.filter((repo) => repo.archived)
+    const allTags = active.flatMap((repo) => repo.topics || [])
     return {
       allowedRepos: allowed,
+      activeRepos: active,
+      archivedRepos: archived,
       tags: Array.from(new Set(allTags)).sort(),
     }
   }, [data])
 
   const filteredRepos = useMemo(() => {
-    const searched = filterBySearch(allowedRepos, search)
+    const searched = filterBySearch(activeRepos, search)
     const tagged = filterByTags(searched, activeTags)
     return sortRepos(tagged, sortKey)
-  }, [allowedRepos, search, activeTags, sortKey])
+  }, [activeRepos, search, activeTags, sortKey])
+
+  const archivedFiltered = useMemo(() => {
+    const searched = filterBySearch(archivedRepos, search)
+    return sortRepos(searched, sortKey)
+  }, [archivedRepos, search, sortKey])
 
   const sections = useMemo(() => {
-    return [
+    const base = [
       {
         id: 'all-starred',
         title: 'All starred repositories',
         items: filteredRepos,
       },
     ]
-  }, [filteredRepos])
+
+    if (archivedFiltered.length) {
+      base.push({
+        id: 'archived',
+        title: 'Archived repositories',
+        items: archivedFiltered,
+      })
+    }
+
+    return base
+  }, [filteredRepos, archivedFiltered])
 
   const handleToggleTag = (tag) => {
     setActiveTags((prev) =>
