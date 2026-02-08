@@ -5,6 +5,7 @@ import ToolCard from '../components/ToolCard.jsx'
 import ToolModal from '../components/ToolModal.jsx'
 import SortBar from '../components/SortBar.jsx'
 import ComparisonPanel from '../components/ComparisonPanel.jsx'
+import BackToTop from '../components/BackToTop.jsx'
 import { useStarredRepos } from '../hooks/useStarredRepos.js'
 import { useRepoLanguages } from '../hooks/useRepoLanguages.js'
 import { useRepoContributors } from '../hooks/useRepoContributors.js'
@@ -132,6 +133,7 @@ const Home = () => {
         contributors={contributors}
         onClose={() => setSelectedRepo(null)}
       />
+      <BackToTop />
     </div>
   )
 }
