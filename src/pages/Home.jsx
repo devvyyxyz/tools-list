@@ -9,6 +9,7 @@ import ComparisonPanel from '../components/ComparisonPanel.jsx'
 import BackToTop from '../components/BackToTop.jsx'
 import { useStarredRepos } from '../hooks/useStarredRepos.js'
 import { useUserRepos } from '../hooks/useUserRepos.js'
+import { useTemplateRepos } from '../hooks/useTemplateRepos.js'
 import { useRepoLanguages } from '../hooks/useRepoLanguages.js'
 import { useRepoContributors } from '../hooks/useRepoContributors.js'
 import {
@@ -42,6 +43,13 @@ const Home = () => {
     error: userError,
   } = useUserRepos()
 
+  const {
+    data: templateReposData,
+    isLoading: isTemplateLoading,
+    isError: isTemplateError,
+    error: templateError,
+  } = useTemplateRepos()
+
   const isAnyLoading = isLoading || isUserLoading
   const errorMessage = (error || userError)?.message
 
@@ -57,14 +65,15 @@ const Home = () => {
     enabled: Boolean(selectedRepo),
   })
 
-  const { activeRepos, archivedRepos, noTagRepos, unstarredRepos, tags } =
+  const { activeRepos, archivedRepos, noTagRepos, unstarredRepos, templateRepos, tags } =
     useMemo(() => {
-      if (!starredData && !userReposData) {
+      if (!starredData && !userReposData && !templateReposData) {
         return {
           activeRepos: [],
           archivedRepos: [],
           noTagRepos: [],
           unstarredRepos: [],
+          templateRepos: [],
           tags: [],
         }
       }
@@ -105,9 +114,10 @@ const Home = () => {
         archivedRepos: archived,
         noTagRepos: noTags,
         unstarredRepos: unstarred,
+        templateRepos: applyFilters(templateReposData || []),
         tags: Array.from(new Set(allTags)).sort(),
       }
-    }, [starredData, userReposData])
+    }, [starredData, userReposData, templateReposData])
 
   const filteredRepos = useMemo(() => {
     const taggedRepos = activeRepos.filter((repo) => (repo.topics || []).length)
@@ -130,6 +140,11 @@ const Home = () => {
     const searched = filterBySearch(unstarredRepos, search)
     return sortRepos(searched, sortKey)
   }, [unstarredRepos, search, sortKey])
+
+  const templateFiltered = useMemo(() => {
+    const searched = filterBySearch(templateRepos, search)
+    return sortRepos(searched, sortKey)
+  }, [templateRepos, search, sortKey])
 
   const sections = useMemo(() => {
     if (!groupByStatus) {
@@ -181,12 +196,22 @@ const Home = () => {
       })
     }
 
+    if (templateFiltered.length) {
+      base.push({
+        id: 'templates',
+        title: 'Public templates',
+        items: templateFiltered,
+        defaultCollapsed: false,
+      })
+    }
+
     return base
   }, [
     filteredRepos,
     archivedFiltered,
     noTagsFiltered,
     unstarredFiltered,
+    templateFiltered,
     groupByStatus,
     sortKey,
   ])

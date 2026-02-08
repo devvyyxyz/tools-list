@@ -63,6 +63,25 @@ export const fetchUserRepos = async ({
   return data
 }
 
+export const fetchTemplateRepos = async ({
+  username = DEFAULT_USERNAME,
+  page = 1,
+  perPage = 100,
+} = {}) => {
+  if (!username) {
+    throw new Error('Missing GitHub username. Set VITE_GITHUB_USERNAME in .env.')
+  }
+  const { data } = await githubRest.get(`/users/${username}/repos`, {
+    params: {
+      page,
+      per_page: perPage,
+      sort: 'updated',
+      direction: 'desc',
+    },
+  })
+  return data.filter((repo) => repo.is_template)
+}
+
 export const fetchRepoDetails = async ({ owner, repo }) => {
   const { data } = await githubRest.get(`/repos/${owner}/${repo}`)
   return data
