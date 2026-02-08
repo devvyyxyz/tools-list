@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
-const Section = ({ title, count, children }) => {
-  const [collapsed, setCollapsed] = useState(false)
+const Section = ({ title, count, children, defaultCollapsed = false }) => {
+  const [collapsed, setCollapsed] = useState(defaultCollapsed)
 
   return (
     <section className="space-y-4">

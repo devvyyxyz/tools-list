@@ -42,6 +42,27 @@ export const fetchStarredRepos = async ({
   return data
 }
 
+export const fetchUserRepos = async ({
+  username = DEFAULT_USERNAME,
+  page = 1,
+  perPage = 100,
+  sort = 'updated',
+  direction = 'desc',
+} = {}) => {
+  if (!username) {
+    throw new Error('Missing GitHub username. Set VITE_GITHUB_USERNAME in .env.')
+  }
+  const { data } = await githubRest.get(`/users/${username}/repos`, {
+    params: {
+      page,
+      per_page: perPage,
+      sort,
+      direction,
+    },
+  })
+  return data
+}
+
 export const fetchRepoDetails = async ({ owner, repo }) => {
   const { data } = await githubRest.get(`/repos/${owner}/${repo}`)
   return data

@@ -7,6 +7,7 @@ import SortBar from '../components/SortBar.jsx'
 import ComparisonPanel from '../components/ComparisonPanel.jsx'
 import BackToTop from '../components/BackToTop.jsx'
 import { useStarredRepos } from '../hooks/useStarredRepos.js'
+import { useUserRepos } from '../hooks/useUserRepos.js'
 import { useRepoLanguages } from '../hooks/useRepoLanguages.js'
 import { useRepoContributors } from '../hooks/useRepoContributors.js'
 import {
@@ -26,7 +27,22 @@ const Home = () => {
   const [selectedRepo, setSelectedRepo] = useState(null)
   const [comparison, setComparison] = useState([])
 
-  const { data, isLoading, isError, error } = useStarredRepos()
+  const {
+    data: starredData,
+    isLoading,
+    isError,
+    error,
+  } = useStarredRepos()
+
+  const {
+    data: userReposData,
+    isLoading: isUserLoading,
+    isError: isUserError,
+    error: userError,
+  } = useUserRepos()
+
+  const isAnyLoading = isLoading || isUserLoading
+  const errorMessage = (error || userError)?.message
 
   const { data: languages = {} } = useRepoLanguages({
     owner: selectedRepo?.owner?.login,
@@ -40,35 +56,57 @@ const Home = () => {
     enabled: Boolean(selectedRepo),
   })
 
-  const { activeRepos, archivedRepos, noTagRepos, tags } = useMemo(() => {
-    if (!data) {
-      return { activeRepos: [], archivedRepos: [], noTagRepos: [], tags: [] }
-    }
-    const denylist = (import.meta.env.VITE_REPO_DENYLIST || '')
-      .split(',')
-      .map((item) => item.trim())
-      .filter(Boolean)
-    const forkAllowlist = (import.meta.env.VITE_FORK_ALLOWLIST || '')
-      .split(',')
-      .map((item) => item.trim())
-      .filter(Boolean)
-    const ownerLogin = import.meta.env.VITE_GITHUB_USERNAME || ''
-    const allowed = filterByOwner(
-      filterForks(filterByDenylist(data, denylist), forkAllowlist),
-      ownerLogin,
-    )
-    const active = allowed.filter((repo) => !repo.archived)
-    const archived = allowed.filter((repo) => repo.archived)
-    const noTags = active.filter((repo) => !(repo.topics || []).length)
-    const withTags = active.filter((repo) => (repo.topics || []).length)
-    const allTags = withTags.flatMap((repo) => repo.topics || [])
-    return {
-      activeRepos: active,
-      archivedRepos: archived,
-      noTagRepos: noTags,
-      tags: Array.from(new Set(allTags)).sort(),
-    }
-  }, [data])
+  const { activeRepos, archivedRepos, noTagRepos, unstarredRepos, tags } =
+    useMemo(() => {
+      if (!starredData && !userReposData) {
+        return {
+          activeRepos: [],
+          archivedRepos: [],
+          noTagRepos: [],
+          unstarredRepos: [],
+          tags: [],
+        }
+      }
+      const denylist = (import.meta.env.VITE_REPO_DENYLIST || '')
+        .split(',')
+        .map((item) => item.trim())
+        .filter(Boolean)
+      const forkAllowlist = (import.meta.env.VITE_FORK_ALLOWLIST || '')
+        .split(',')
+        .map((item) => item.trim())
+        .filter(Boolean)
+      const ownerLogin = import.meta.env.VITE_GITHUB_USERNAME || ''
+      const applyFilters = (repos) =>
+        filterByOwner(
+          filterForks(filterByDenylist(repos || [], denylist), forkAllowlist),
+          ownerLogin,
+        )
+
+      const allowedStarred = applyFilters(starredData || [])
+      const allowedUser = applyFilters(userReposData || [])
+      const starredSet = new Set(
+        allowedStarred.map((repo) =>
+          String(repo.full_name || '').toLowerCase(),
+        ),
+      )
+      const unstarred = allowedUser.filter(
+        (repo) =>
+          !starredSet.has(String(repo.full_name || '').toLowerCase()),
+      )
+
+      const active = allowedStarred.filter((repo) => !repo.archived)
+      const archived = allowedStarred.filter((repo) => repo.archived)
+      const noTags = active.filter((repo) => !(repo.topics || []).length)
+      const withTags = active.filter((repo) => (repo.topics || []).length)
+      const allTags = withTags.flatMap((repo) => repo.topics || [])
+      return {
+        activeRepos: active,
+        archivedRepos: archived,
+        noTagRepos: noTags,
+        unstarredRepos: unstarred,
+        tags: Array.from(new Set(allTags)).sort(),
+      }
+    }, [starredData, userReposData])
 
   const filteredRepos = useMemo(() => {
     const taggedRepos = activeRepos.filter((repo) => (repo.topics || []).length)
@@ -87,10 +125,15 @@ const Home = () => {
     return sortRepos(searched, sortKey)
   }, [archivedRepos, search, sortKey])
 
+  const unstarredFiltered = useMemo(() => {
+    const searched = filterBySearch(unstarredRepos, search)
+    return sortRepos(searched, sortKey)
+  }, [unstarredRepos, search, sortKey])
+
   const sections = useMemo(() => {
     if (!groupByStatus) {
       const combined = sortRepos(
-        [...filteredRepos, ...archivedFiltered],
+        [...filteredRepos, ...noTagsFiltered, ...archivedFiltered, ...unstarredFiltered],
         sortKey,
       )
       return [
@@ -115,6 +158,7 @@ const Home = () => {
         id: 'no-tags',
         title: 'Repos with no tags',
         items: noTagsFiltered,
+        defaultCollapsed: true,
       })
     }
 
@@ -123,11 +167,28 @@ const Home = () => {
         id: 'archived',
         title: 'Archived repositories',
         items: archivedFiltered,
+        defaultCollapsed: true,
+      })
+    }
+
+    if (unstarredFiltered.length) {
+      base.push({
+        id: 'unstarred',
+        title: 'Unstarred repositories',
+        items: unstarredFiltered,
+        defaultCollapsed: true,
       })
     }
 
     return base
-  }, [filteredRepos, archivedFiltered, noTagsFiltered, groupByStatus, sortKey])
+  }, [
+    filteredRepos,
+    archivedFiltered,
+    noTagsFiltered,
+    unstarredFiltered,
+    groupByStatus,
+    sortKey,
+  ])
 
   const handleToggleTag = (tag) => {
     setActiveTags((prev) =>
@@ -168,10 +229,15 @@ const Home = () => {
               Starred tools
             </h2>
             <p className="text-sm text-slate-500 dark:text-slate-400">
-              {isLoading && 'Loading repositories...'}
-              {isError && error?.message}
-              {!isLoading && !isError &&
-                `${filteredRepos.length} tools matched.`}
+              {isAnyLoading && 'Loading repositories...'}
+              {(isError || isUserError) && errorMessage}
+              {!isAnyLoading && !(isError || isUserError) &&
+                `${
+                  filteredRepos.length +
+                  noTagsFiltered.length +
+                  archivedFiltered.length +
+                  unstarredFiltered.length
+                } tools matched.`}
             </p>
           </div>
           <SortBar
@@ -191,6 +257,7 @@ const Home = () => {
             key={section.id}
             title={section.title}
             count={section.items.length}
+            defaultCollapsed={section.defaultCollapsed}
           >
             {section.items.map((repo) => (
               <ToolCard
