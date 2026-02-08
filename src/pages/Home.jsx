@@ -252,7 +252,9 @@ const Home = () => {
           <ComparisonPanel items={comparison} onRemove={handleRemoveCompare} />
         )}
 
-        {sections.map((section) => (
+        {sections
+          .filter((section) => section.items.length > 0)
+          .map((section) => (
           <Section
             key={section.id}
             title={section.title}
