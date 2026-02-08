@@ -8,7 +8,8 @@ const TagFilterBar = ({ tags = [], activeTags = [], onToggleTag }) => {
   }
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="max-h-24 overflow-y-auto rounded-2xl border border-slate-200 bg-white/80 p-3 shadow-sm dark:border-slate-800 dark:bg-slate-950/70">
+      <div className="flex flex-wrap gap-2">
       {tags.map((tag) => {
         const isActive = activeTags.includes(tag)
         return (
@@ -26,6 +27,7 @@ const TagFilterBar = ({ tags = [], activeTags = [], onToggleTag }) => {
           </button>
         )
       })}
+      </div>
     </div>
   )
 }
