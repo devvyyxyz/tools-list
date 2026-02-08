@@ -39,14 +39,8 @@ const Home = () => {
     enabled: Boolean(selectedRepo),
   })
 
-  const tags = useMemo(() => {
-    if (!data) return []
-    const all = data.flatMap((repo) => repo.topics || [])
-    return Array.from(new Set(all)).sort()
-  }, [data])
-
-  const filteredRepos = useMemo(() => {
-    if (!data) return []
+  const { allowedRepos, tags } = useMemo(() => {
+    if (!data) return { allowedRepos: [], tags: [] }
     const denylist = (import.meta.env.VITE_REPO_DENYLIST || '')
       .split(',')
       .map((item) => item.trim())
@@ -60,10 +54,18 @@ const Home = () => {
       filterForks(filterByDenylist(data, denylist), forkAllowlist),
       ownerLogin,
     )
-    const searched = filterBySearch(allowed, search)
+    const allTags = allowed.flatMap((repo) => repo.topics || [])
+    return {
+      allowedRepos: allowed,
+      tags: Array.from(new Set(allTags)).sort(),
+    }
+  }, [data])
+
+  const filteredRepos = useMemo(() => {
+    const searched = filterBySearch(allowedRepos, search)
     const tagged = filterByTags(searched, activeTags)
     return sortRepos(tagged, sortKey)
-  }, [data, search, activeTags, sortKey])
+  }, [allowedRepos, search, activeTags, sortKey])
 
   const sections = useMemo(() => {
     return [
