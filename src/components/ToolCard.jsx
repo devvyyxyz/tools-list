@@ -19,6 +19,11 @@ const ToolCard = ({ repo, onSelect, onToggleCompare, isCompared }) => {
                 Archived
               </span>
             )}
+            {repo.is_template && (
+              <span className="rounded-full bg-green-100 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-green-700">
+                Template
+              </span>
+            )}
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400">
             {repo.full_name}
