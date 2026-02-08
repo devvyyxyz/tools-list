@@ -1,4 +1,4 @@
-const SortBar = ({ value, onChange }) => {
+const SortBar = ({ value, onChange, groupByStatus, onToggleGroup }) => {
   return (
     <div className="flex flex-wrap items-center gap-3">
       <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
@@ -13,6 +13,17 @@ const SortBar = ({ value, onChange }) => {
         <option value="updated">Last updated</option>
         <option value="issues">Open issues</option>
       </select>
+      <button
+        type="button"
+        onClick={() => onToggleGroup(!groupByStatus)}
+        className={`rounded-xl border px-3 py-2 text-xs font-semibold uppercase tracking-wide transition ${
+          groupByStatus
+            ? 'border-indigo-500 bg-indigo-500 text-white'
+            : 'border-slate-200 bg-white text-slate-600 hover:border-indigo-300 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300'
+        }`}
+      >
+        {groupByStatus ? 'Grouped' : 'Ungrouped'}
+      </button>
     </div>
   )
 }

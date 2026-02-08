@@ -22,6 +22,7 @@ const Home = () => {
   const [search, setSearch] = useState('')
   const [activeTags, setActiveTags] = useState([])
   const [sortKey, setSortKey] = useState('stars')
+  const [groupByStatus, setGroupByStatus] = useState(true)
   const [selectedRepo, setSelectedRepo] = useState(null)
   const [comparison, setComparison] = useState([])
 
@@ -77,10 +78,24 @@ const Home = () => {
   }, [archivedRepos, search, sortKey])
 
   const sections = useMemo(() => {
+    if (!groupByStatus) {
+      const combined = sortRepos(
+        [...filteredRepos, ...archivedFiltered],
+        sortKey,
+      )
+      return [
+        {
+          id: 'all-repos',
+          title: 'All repositories',
+          items: combined,
+        },
+      ]
+    }
+
     const base = [
       {
         id: 'all-starred',
-        title: 'All starred repositories',
+        title: 'All repositories',
         items: filteredRepos,
       },
     ]
@@ -94,7 +109,7 @@ const Home = () => {
     }
 
     return base
-  }, [filteredRepos, archivedFiltered])
+  }, [filteredRepos, archivedFiltered, groupByStatus, sortKey])
 
   const handleToggleTag = (tag) => {
     setActiveTags((prev) =>
@@ -141,7 +156,12 @@ const Home = () => {
                 `${filteredRepos.length} tools matched.`}
             </p>
           </div>
-          <SortBar value={sortKey} onChange={setSortKey} />
+          <SortBar
+            value={sortKey}
+            onChange={setSortKey}
+            groupByStatus={groupByStatus}
+            onToggleGroup={setGroupByStatus}
+          />
         </div>
 
         {comparison.length > 0 && (
