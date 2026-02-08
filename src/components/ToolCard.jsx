@@ -4,15 +4,22 @@ const ToolCard = ({ repo, onSelect, onToggleCompare, isCompared }) => {
   return (
     <div className="glass-panel flex h-full flex-col gap-4 p-5">
       <div className="flex items-start justify-between gap-4">
-        <div>
-          <a
-            href={repo.html_url}
-            target="_blank"
-            rel="noreferrer"
-            className="text-lg font-semibold text-indigo-600 hover:underline"
-          >
-            {repo.name}
-          </a>
+        <div className="space-y-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <a
+              href={repo.html_url}
+              target="_blank"
+              rel="noreferrer"
+              className="text-lg font-semibold text-indigo-600 hover:underline"
+            >
+              {repo.name}
+            </a>
+            {repo.archived && (
+              <span className="rounded-full bg-amber-100 px-2 py-1 text-[10px] font-semibold uppercase tracking-wide text-amber-700">
+                Archived
+              </span>
+            )}
+          </div>
           <p className="text-xs text-slate-500 dark:text-slate-400">
             {repo.full_name}
           </p>
