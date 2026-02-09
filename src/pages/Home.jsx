@@ -353,7 +353,7 @@ const Home = () => {
   }
 
   return (
-    <div className="min-h-screen">
+    <div>
       {showPreloader && <Preloader label="Loading your GitHub tools…" />}
       <Header
         title="Tools"
