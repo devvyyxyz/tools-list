@@ -70,6 +70,24 @@ const ToolModal = ({ repo, languages, contributors, onClose }) => {
               </div>
             </div>
 
+            {(repo.topics || []).length > 0 && (
+              <div className="mt-6 space-y-2">
+                <h3 className="text-sm font-bold text-white">
+                  Tags
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {repo.topics.map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-full border border-indigo-500 bg-indigo-500/20 px-3 py-1 text-xs font-semibold text-indigo-300"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div className="mt-6 space-y-2">
               <h3 className="text-sm font-bold text-white">
                 Language breakdown
@@ -83,7 +101,7 @@ const ToolModal = ({ repo, languages, contributors, onClose }) => {
             </div>
 
             <div className="mt-6 space-y-3">
-              <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+              <h3 className="text-sm font-bold text-white">
                 Top contributors
               </h3>
               <div className="grid gap-3 md:grid-cols-2">
@@ -101,10 +119,10 @@ const ToolModal = ({ repo, languages, contributors, onClose }) => {
                       className="h-10 w-10 rounded-full"
                     />
                     <div>
-                      <p className="font-semibold text-slate-900 dark:text-white">
+                      <p className="font-semibold text-white">
                         {contributor.login}
                       </p>
-                      <p className="text-xs text-slate-500 dark:text-slate-400">
+                      <p className="text-xs text-white/60">
                         {formatNumber(contributor.contributions)} contributions
                       </p>
                     </div>
