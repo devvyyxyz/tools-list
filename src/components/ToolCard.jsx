@@ -1,4 +1,5 @@
 import { formatNumber, formatDate, formatTitle } from '../utils/formatting.js'
+import { MdStar, MdBugReport, MdCallSplit, MdAccessTime } from 'react-icons/md'
 
 const ToolCard = ({ repo, onSelect, onToggleCompare, isCompared }) => {
   return (
@@ -48,25 +49,37 @@ const ToolCard = ({ repo, onSelect, onToggleCompare, isCompared }) => {
 
       <div className="mt-auto grid grid-cols-2 gap-4 text-xs text-white/80">
         <div>
-          <p className="font-semibold uppercase tracking-wide text-white/75">Stars</p>
+          <p className="flex items-center gap-1 font-semibold uppercase tracking-wide text-white/75">
+            <MdStar className="text-sm" />
+            Stars
+          </p>
           <p className="text-sm font-semibold text-white">
             {formatNumber(repo.stargazers_count)}
           </p>
         </div>
         <div>
-          <p className="font-semibold uppercase tracking-wide text-white/75">Open issues</p>
+          <p className="flex items-center gap-1 font-semibold uppercase tracking-wide text-white/75">
+            <MdBugReport className="text-sm" />
+            Open issues
+          </p>
           <p className="text-sm font-semibold text-white">
             {formatNumber(repo.open_issues_count)}
           </p>
         </div>
         <div>
-          <p className="font-semibold uppercase tracking-wide text-white/75">Updated</p>
+          <p className="flex items-center gap-1 font-semibold uppercase tracking-wide text-white/75">
+            <MdAccessTime className="text-sm" />
+            Updated
+          </p>
           <p className="text-sm font-semibold text-white">
             {formatDate(repo.updated_at)}
           </p>
         </div>
         <div>
-          <p className="font-semibold uppercase tracking-wide text-white/75">Forks</p>
+          <p className="flex items-center gap-1 font-semibold uppercase tracking-wide text-white/75">
+            <MdCallSplit className="text-sm" />
+            Forks
+          </p>
           <p className="text-sm font-semibold text-white">
             {formatNumber(repo.forks_count)}
           </p>
