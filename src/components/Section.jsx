@@ -12,7 +12,7 @@ const Section = ({ title, count, children, defaultCollapsed = false }) => {
         className="flex w-full items-center justify-between rounded-2xl border border-slate-200 bg-white px-5 py-4 text-left text-sm font-semibold text-slate-800 shadow-sm transition hover:border-indigo-300 dark:border-white/20 dark:bg-black dark:text-white dark:hover:border-indigo-500"
       >
         <span>{title}</span>
-        <span className="flex items-center gap-3 text-xs font-medium text-black/60 dark:text-white/75">
+        <span className="flex items-center gap-3 text-xs font-medium text-white/75">
           {count} tools
           {collapsed ? (
             <MdExpandMore className="text-lg" />

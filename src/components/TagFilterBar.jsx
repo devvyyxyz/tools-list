@@ -1,7 +1,7 @@
 const TagFilterBar = ({ tags = [], activeTags = [], onToggleTag }) => {
   if (!tags.length) {
     return (
-      <p className="text-xs font-semibold text-black/75">
+      <p className="text-xs font-semibold text-white/75">
         No tags available yet. Topics will appear once GitHub data loads.
       </p>
     )

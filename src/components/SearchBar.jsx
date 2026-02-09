@@ -1,7 +1,7 @@
 const SearchBar = ({ value, onChange }) => {
   return (
     <div className="flex flex-col gap-2">
-      <label className="text-xs font-semibold text-black/75">
+      <label className="text-xs font-semibold text-white/75">
         Search tools
       </label>
       <input

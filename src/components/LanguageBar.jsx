@@ -6,7 +6,7 @@ const LanguageBar = ({ languages = {} }) => {
 
   if (!entries.length) {
     return (
-      <div className="text-xs text-black/60 dark:text-white/80">Language data unavailable.</div>
+      <div className="text-xs text-white/80">Language data unavailable.</div>
     )
   }
 

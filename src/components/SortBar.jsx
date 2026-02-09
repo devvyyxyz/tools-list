@@ -1,7 +1,7 @@
 const SortBar = ({ value, onChange, groupByStatus, onToggleGroup }) => {
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <span className="text-xs font-semibold text-black/75">
+      <span className="text-xs font-semibold text-white/75">
         Sort by
       </span>
       <select

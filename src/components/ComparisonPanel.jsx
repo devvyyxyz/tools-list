@@ -7,10 +7,10 @@ const ComparisonPanel = ({ items, onRemove }) => {
     <div className="glass-panel mt-6 p-5">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+          <h3 className="text-lg font-semibold text-white">
             Comparison mode
           </h3>
-          <p className="text-sm text-black/60 dark:text-white/80">
+          <p className="text-sm text-white/80">
             Compare up to 3 tools side by side.
           </p>
         </div>
@@ -22,7 +22,7 @@ const ComparisonPanel = ({ items, onRemove }) => {
             className="rounded-2xl border border-slate-200/60 p-4 dark:border-white/20 dark:bg-white/5\"
           >
             <div className="flex items-center justify-between">
-              <p className="text-sm font-semibold text-slate-900 dark:text-white">
+              <p className="text-sm font-semibold text-white">
                 {repo.name}
               </p>
               <button
@@ -33,7 +33,7 @@ const ComparisonPanel = ({ items, onRemove }) => {
                 Remove
               </button>
             </div>
-            <div className="mt-3 space-y-2 text-xs text-black/60 dark:text-white/80">
+            <div className="mt-3 space-y-2 text-xs text-white/80">
               <p>Stars: {formatNumber(repo.stargazers_count)}</p>
               <p>Open issues: {formatNumber(repo.open_issues_count)}</p>
               <p>Forks: {formatNumber(repo.forks_count)}</p>

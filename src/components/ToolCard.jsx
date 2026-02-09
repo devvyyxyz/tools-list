@@ -25,7 +25,7 @@ const ToolCard = ({ repo, onSelect, onToggleCompare, isCompared }) => {
             {isCompared ? 'Selected' : 'Compare'}
           </button>
         </div>
-        <p className="text-xs text-gray-600 dark:text-white">
+        <p className="text-xs text-white/70">
           {repo.full_name}
         </p>
         <div className="flex flex-wrap gap-2">
@@ -42,32 +42,32 @@ const ToolCard = ({ repo, onSelect, onToggleCompare, isCompared }) => {
         </div>
       </div>
 
-      <p className="line-clamp-3 text-sm text-black/55 dark:text-white">
+      <p className="line-clamp-3 text-sm text-white/75">
         {repo.description || 'No description available yet.'}
       </p>
 
-      <div className="mt-auto grid grid-cols-2 gap-4 text-xs text-black/65 dark:text-white/80">
+      <div className="mt-auto grid grid-cols-2 gap-4 text-xs text-white/80">
         <div>
-          <p className="font-semibold uppercase tracking-wide">Stars</p>
-          <p className="text-sm font-semibold text-black dark:text-slate-100">
+          <p className="font-semibold uppercase tracking-wide text-white/75">Stars</p>
+          <p className="text-sm font-semibold text-white">
             {formatNumber(repo.stargazers_count)}
           </p>
         </div>
         <div>
-          <p className="font-semibold uppercase tracking-wide">Open issues</p>
-          <p className="text-sm font-semibold text-black dark:text-slate-100">
+          <p className="font-semibold uppercase tracking-wide text-white/75">Open issues</p>
+          <p className="text-sm font-semibold text-white">
             {formatNumber(repo.open_issues_count)}
           </p>
         </div>
         <div>
-          <p className="font-semibold uppercase tracking-wide">Updated</p>
-          <p className="text-sm font-semibold text-black dark:text-slate-100">
+          <p className="font-semibold uppercase tracking-wide text-white/75">Updated</p>
+          <p className="text-sm font-semibold text-white">
             {formatDate(repo.updated_at)}
           </p>
         </div>
         <div>
-          <p className="font-semibold uppercase tracking-wide">Forks</p>
-          <p className="text-sm font-semibold text-black dark:text-slate-100">
+          <p className="font-semibold uppercase tracking-wide text-white/75">Forks</p>
+          <p className="text-sm font-semibold text-white">
             {formatNumber(repo.forks_count)}
           </p>
         </div>
@@ -76,7 +76,7 @@ const ToolCard = ({ repo, onSelect, onToggleCompare, isCompared }) => {
       <button
         type="button"
         onClick={() => onSelect(repo)}
-        className="mt-auto inline-flex items-center justify-center rounded-xl border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm font-semibold text-indigo-600 transition hover:border-indigo-300 hover:bg-indigo-100 dark:border-indigo-600/40 dark:bg-indigo-500/10 dark:text-indigo-200"
+        className="mt-auto inline-flex items-center justify-center rounded-xl border border-indigo-500 bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:border-indigo-400 hover:bg-indigo-500"
       >
         View details
       </button>
