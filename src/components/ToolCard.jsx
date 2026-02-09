@@ -1,4 +1,4 @@
-import { formatNumber, formatDate } from '../utils/formatting.js'
+import { formatNumber, formatDate, formatTitle } from '../utils/formatting.js'
 
 const ToolCard = ({ repo, onSelect, onToggleCompare, isCompared }) => {
   return (
@@ -11,7 +11,7 @@ const ToolCard = ({ repo, onSelect, onToggleCompare, isCompared }) => {
             rel="noreferrer"
             className="flex-1 text-lg font-semibold text-indigo-600 uppercase no-underline"
           >
-            {repo.name}
+            {formatTitle(repo.name)}
           </a>
           <button
             type="button"
