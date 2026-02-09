@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { MdExpandMore, MdExpandLess } from 'react-icons/md'
 
-const Section = ({ title, count, children, defaultCollapsed = false }) => {
+const Section = ({ title, count, children, defaultCollapsed = false, showCount = true, isNested = false }) => {
   const [collapsed, setCollapsed] = useState(defaultCollapsed)
 
   return (
@@ -13,7 +13,7 @@ const Section = ({ title, count, children, defaultCollapsed = false }) => {
       >
         <span>{title}</span>
         <span className="flex items-center gap-3 text-xs font-medium text-white/75">
-          {count} tools
+          {showCount && <span>{count} tools</span>}
           {collapsed ? (
             <MdExpandMore className="text-lg" />
           ) : (
@@ -21,9 +21,17 @@ const Section = ({ title, count, children, defaultCollapsed = false }) => {
           )}
         </span>
       </button>
-      {!collapsed && <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {children}
-      </div>}
+      {!collapsed && (
+        isNested ? (
+          <div className="space-y-6">
+            {children}
+          </div>
+        ) : (
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {children}
+          </div>
+        )
+      )}
     </section>
   )
 }

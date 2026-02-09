@@ -4,6 +4,7 @@ import Header from '../components/Header.jsx'
 import Section from '../components/Section.jsx'
 import ToolCard from '../components/ToolCard.jsx'
 import ToolCardSkeleton from '../components/ToolCardSkeleton.jsx'
+import SubSection from '../components/SubSection.jsx'
 import ToolModal from '../components/ToolModal.jsx'
 import SortBar from '../components/SortBar.jsx'
 import ComparisonPanel from '../components/ComparisonPanel.jsx'
@@ -151,6 +152,53 @@ const Home = () => {
     return sortRepos(searched, sortKey)
   }, [templateRepos, search, sortKey])
 
+  const tagSectionDefinitions = useMemo(() => {
+    const raw = (import.meta.env.VITE_TAG_SECTIONS || '').trim()
+
+    if (!raw) {
+      return []
+    }
+
+    return raw
+      .split('|')
+      .map((section) => section.trim())
+      .filter(Boolean)
+      .map((section) => {
+        const [label, tagList] = section.split(':')
+        const tagsValue = (tagList || label)
+          .split(',')
+          .map((tag) => tag.trim())
+          .filter(Boolean)
+
+        if (!tagsValue.length) return null
+
+        const titleValue = tagList
+          ? label.trim()
+          : tagsValue
+              .join(' ')
+              .split('-')
+              .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+              .join(' ')
+
+        return {
+          id: `tag-${tagsValue.join('-')}`,
+          title: titleValue || tagsValue.join(', '),
+          tags: tagsValue,
+        }
+      })
+      .filter(Boolean)
+  }, [tags])
+
+  const tagSections = useMemo(() => {
+    return tagSectionDefinitions
+      .map((section) => ({
+        ...section,
+        items: filterByTags(filteredRepos, section.tags),
+        showCount: false,
+      }))
+      .filter((section) => section.items.length > 0)
+  }, [filteredRepos, tagSectionDefinitions])
+
   const sections = useMemo(() => {
     if (!groupByStatus) {
       const combined = sortRepos(
@@ -166,6 +214,68 @@ const Home = () => {
       ]
     }
 
+    // If we have tag sections, create nested structure
+    if (tagSections.length > 0) {
+      const reposInTagSections = new Set()
+      tagSections.forEach((section) => {
+        section.items.forEach((repo) => {
+          reposInTagSections.add(repo.id)
+        })
+      })
+
+      const remainingRepos = filteredRepos.filter((repo) => !reposInTagSections.has(repo.id))
+
+      const allRepositoriesSection = {
+        id: 'all-starred',
+        title: 'All repositories',
+        items: filteredRepos,
+        isNested: true,
+        nestedSections: tagSections,
+        remainingItems: remainingRepos,
+      }
+
+      const base = [allRepositoriesSection]
+
+      if (noTagsFiltered.length) {
+        base.push({
+          id: 'no-tags',
+          title: 'Repos with no tags',
+          items: noTagsFiltered,
+          defaultCollapsed: true,
+        })
+      }
+
+      if (archivedFiltered.length) {
+        base.push({
+          id: 'archived',
+          title: 'Archived repositories',
+          items: archivedFiltered,
+          defaultCollapsed: true,
+        })
+      }
+
+      if (unstarredFiltered.length) {
+        base.push({
+          id: 'unstarred',
+          title: 'Unstarred repositories',
+          items: unstarredFiltered,
+          defaultCollapsed: true,
+        })
+      }
+
+      if (templateFiltered.length) {
+        base.push({
+          id: 'templates',
+          title: 'Public templates',
+          items: templateFiltered,
+          defaultCollapsed: true,
+        })
+      }
+
+      return base
+    }
+
+    // Default behavior without tag sections
     const base = [
       {
         id: 'all-starred',
@@ -219,6 +329,7 @@ const Home = () => {
     templateFiltered,
     groupByStatus,
     sortKey,
+    tagSections,
   ])
 
   const handleToggleTag = (tag) => {
@@ -319,16 +430,56 @@ const Home = () => {
                 title={section.title}
                 count={section.items.length}
                 defaultCollapsed={section.defaultCollapsed}
+                showCount={section.showCount !== false}
+                isNested={section.isNested}
               >
-                {section.items.map((repo) => (
-                  <ToolCard
-                    key={repo.id}
-                    repo={repo}
-                    onSelect={setSelectedRepo}
-                    onToggleCompare={handleToggleCompare}
-                    isCompared={comparison.some((item) => item.id === repo.id)}
-                  />
-                ))}
+                {section.isNested ? (
+                  <>
+                    {section.nestedSections.map((tagSection) => (
+                      <SubSection
+                        key={tagSection.id}
+                        title={tagSection.title}
+                        defaultCollapsed={false}
+                      >
+                        {tagSection.items.map((repo) => (
+                          <ToolCard
+                            key={repo.id}
+                            repo={repo}
+                            onSelect={setSelectedRepo}
+                            onToggleCompare={handleToggleCompare}
+                            isCompared={comparison.some((item) => item.id === repo.id)}
+                          />
+                        ))}
+                      </SubSection>
+                    ))}
+                    {section.remainingItems.length > 0 && (
+                      <SubSection
+                        title="Other"
+                        defaultCollapsed={false}
+                      >
+                        {section.remainingItems.map((repo) => (
+                          <ToolCard
+                            key={repo.id}
+                            repo={repo}
+                            onSelect={setSelectedRepo}
+                            onToggleCompare={handleToggleCompare}
+                            isCompared={comparison.some((item) => item.id === repo.id)}
+                          />
+                        ))}
+                      </SubSection>
+                    )}
+                  </>
+                ) : (
+                  section.items.map((repo) => (
+                    <ToolCard
+                      key={repo.id}
+                      repo={repo}
+                      onSelect={setSelectedRepo}
+                      onToggleCompare={handleToggleCompare}
+                      isCompared={comparison.some((item) => item.id === repo.id)}
+                    />
+                  ))
+                )}
               </Section>
             ))}
       </main>

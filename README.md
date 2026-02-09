@@ -24,3 +24,19 @@ This project uses GitHub Actions to build and deploy to GitHub Pages. The app re
 - Run the **Deploy to GitHub Pages** workflow manually from the Actions tab.
 
 If `VITE_GITHUB_USERNAME` is missing, the site will not load GitHub data.
+
+## Tag-based Sections
+
+You can control which tag sections appear in the grouped view by setting `VITE_TAG_SECTIONS`.
+
+Format:
+
+- Sections are separated by `|`.
+- Each section is `Title:tag1,tag2`.
+- Repos appear in a section only if they include all tags listed.
+
+Example:
+
+```
+VITE_TAG_SECTIONS=Discord:discord|Bots:discord-bot,bot|AI:ai,ml
+```
