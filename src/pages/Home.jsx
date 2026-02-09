@@ -149,7 +149,7 @@ const Home = () => {
   const sections = useMemo(() => {
     if (!groupByStatus) {
       const combined = sortRepos(
-        [...filteredRepos, ...noTagsFiltered, ...archivedFiltered, ...unstarredFiltered],
+        [...filteredRepos, ...noTagsFiltered, ...archivedFiltered, ...unstarredFiltered, ...templateFiltered],
         sortKey,
       )
       return [
