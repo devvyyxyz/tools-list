@@ -10,7 +10,7 @@ const ComparisonPanel = ({ items, onRemove }) => {
           <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
             Comparison mode
           </h3>
-          <p className="text-sm text-slate-500 dark:text-slate-400">
+          <p className="text-sm text-black/60 dark:text-white/80">
             Compare up to 3 tools side by side.
           </p>
         </div>
@@ -19,7 +19,7 @@ const ComparisonPanel = ({ items, onRemove }) => {
         {items.map((repo) => (
           <div
             key={repo.id}
-            className="rounded-2xl border border-slate-200/60 p-4 dark:border-slate-800/60"
+            className="rounded-2xl border border-slate-200/60 p-4 dark:border-white/20 dark:bg-white/5\"
           >
             <div className="flex items-center justify-between">
               <p className="text-sm font-semibold text-slate-900 dark:text-white">
@@ -33,7 +33,7 @@ const ComparisonPanel = ({ items, onRemove }) => {
                 Remove
               </button>
             </div>
-            <div className="mt-3 space-y-2 text-xs text-slate-500 dark:text-slate-400">
+            <div className="mt-3 space-y-2 text-xs text-black/60 dark:text-white/80">
               <p>Stars: {formatNumber(repo.stargazers_count)}</p>
               <p>Open issues: {formatNumber(repo.open_issues_count)}</p>
               <p>Forks: {formatNumber(repo.forks_count)}</p>

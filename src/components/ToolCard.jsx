@@ -2,7 +2,7 @@ import { formatNumber, formatDate } from '../utils/formatting.js'
 
 const ToolCard = ({ repo, onSelect, onToggleCompare, isCompared }) => {
   return (
-    <div className="glass-panel flex h-full flex-col gap-4 p-5">
+    <div className="glass-panel flex h-full min-h-[380px] flex-col gap-4 p-5">
       <div className="space-y-2">
         <div className="flex items-start justify-between gap-4">
           <a
@@ -25,7 +25,7 @@ const ToolCard = ({ repo, onSelect, onToggleCompare, isCompared }) => {
             {isCompared ? 'Selected' : 'Compare'}
           </button>
         </div>
-        <p className="text-xs text-slate-500 dark:text-slate-400">
+        <p className="text-xs text-gray-600 dark:text-white">
           {repo.full_name}
         </p>
         <div className="flex flex-wrap gap-2">
@@ -42,32 +42,32 @@ const ToolCard = ({ repo, onSelect, onToggleCompare, isCompared }) => {
         </div>
       </div>
 
-      <p className="text-sm text-slate-600 dark:text-slate-300">
+      <p className="line-clamp-3 text-sm text-black/55 dark:text-white">
         {repo.description || 'No description available yet.'}
       </p>
 
-      <div className="grid grid-cols-2 gap-4 text-xs text-slate-500 dark:text-slate-400">
+      <div className="mt-auto grid grid-cols-2 gap-4 text-xs text-black/65 dark:text-white/80">
         <div>
           <p className="font-semibold uppercase tracking-wide">Stars</p>
-          <p className="text-sm text-slate-900 dark:text-slate-100">
+          <p className="text-sm font-semibold text-black dark:text-slate-100">
             {formatNumber(repo.stargazers_count)}
           </p>
         </div>
         <div>
           <p className="font-semibold uppercase tracking-wide">Open issues</p>
-          <p className="text-sm text-slate-900 dark:text-slate-100">
+          <p className="text-sm font-semibold text-black dark:text-slate-100">
             {formatNumber(repo.open_issues_count)}
           </p>
         </div>
         <div>
           <p className="font-semibold uppercase tracking-wide">Updated</p>
-          <p className="text-sm text-slate-900 dark:text-slate-100">
+          <p className="text-sm font-semibold text-black dark:text-slate-100">
             {formatDate(repo.updated_at)}
           </p>
         </div>
         <div>
           <p className="font-semibold uppercase tracking-wide">Forks</p>
-          <p className="text-sm text-slate-900 dark:text-slate-100">
+          <p className="text-sm font-semibold text-black dark:text-slate-100">
             {formatNumber(repo.forks_count)}
           </p>
         </div>

@@ -24,7 +24,7 @@ const ToolModal = ({ repo, languages, contributors, onClose }) => {
                 <h2 className="text-2xl font-semibold text-slate-900 dark:text-white">
                   {repo.name}
                 </h2>
-                <p className="text-sm text-slate-500 dark:text-slate-400">
+                <p className="text-sm text-black/60 dark:text-white/90">
                   {repo.full_name}
                 </p>
               </div>
@@ -37,43 +37,43 @@ const ToolModal = ({ repo, languages, contributors, onClose }) => {
               </button>
             </div>
 
-            <p className="mt-4 text-sm text-slate-600 dark:text-slate-300">
+            <p className="mt-4 text-sm text-black/55 dark:text-white">
               {repo.description || 'No description available yet.'}
             </p>
 
             <div className="mt-6 grid gap-4 md:grid-cols-3">
               <div className="rounded-xl border border-slate-200/60 p-4 dark:border-slate-800/60">
-                <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">
                   Stars
                 </p>
-                <p className="text-lg font-semibold text-slate-900 dark:text-white">
+                <p className="text-lg font-semibold text-black dark:text-white">
                   {formatNumber(repo.stargazers_count)}
                 </p>
               </div>
               <div className="rounded-xl border border-slate-200/60 p-4 dark:border-slate-800/60">
-                <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">
                   Open issues
                 </p>
-                <p className="text-lg font-semibold text-slate-900 dark:text-white">
+                <p className="text-lg font-semibold text-black dark:text-white">
                   {formatNumber(repo.open_issues_count)}
                 </p>
               </div>
               <div className="rounded-xl border border-slate-200/60 p-4 dark:border-slate-800/60">
-                <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-400">
                   Forks
                 </p>
-                <p className="text-lg font-semibold text-slate-900 dark:text-white">
+                <p className="text-lg font-semibold text-black dark:text-white">
                   {formatNumber(repo.forks_count)}
                 </p>
               </div>
             </div>
 
             <div className="mt-6 space-y-2">
-              <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
+              <h3 className="text-sm font-bold text-black dark:text-white">
                 Language breakdown
               </h3>
               <LanguageBar languages={languages} />
-              <div className="flex flex-wrap gap-2 text-xs text-slate-500 dark:text-slate-400">
+              <div className="flex flex-wrap gap-2 text-xs text-black/60 dark:text-white/80">
                 {Object.entries(languages).map(([language, value]) => (
                   <span key={language}>{`${language} · ${formatNumber(value)}`}</span>
                 ))}
@@ -91,7 +91,7 @@ const ToolModal = ({ repo, languages, contributors, onClose }) => {
                     href={contributor.html_url}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center gap-3 rounded-xl border border-slate-200/60 p-3 text-sm text-slate-600 transition hover:border-indigo-300 dark:border-slate-800/60 dark:text-slate-300"
+                    className="flex items-center gap-3 rounded-xl border border-slate-200/60 p-3 text-sm text-black/60 transition hover:border-indigo-300 dark:border-white/10 dark:text-white/80 dark:hover:border-indigo-400"
                   >
                     <img
                       src={contributor.avatar_url}

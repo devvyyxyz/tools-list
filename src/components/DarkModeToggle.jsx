@@ -8,7 +8,7 @@ const DarkModeToggle = () => {
     <button
       type="button"
       onClick={() => setIsDark((prev) => !prev)}
-      className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
+      className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 dark:border-white/20 dark:bg-black dark:text-white dark:hover:bg-white/10"
     >
       {isDark ? (
         <MdLightMode className="text-lg" />

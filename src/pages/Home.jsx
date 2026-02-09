@@ -251,10 +251,10 @@ const Home = () => {
       <main className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-8">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h2 className="text-xl font-semibold text-slate-900 dark:text-white">
+            <h2 className="text-xl font-semibold text-black dark:text-white">
               Starred tools
             </h2>
-            <p className="text-sm text-slate-500 dark:text-slate-400">
+            <p className="text-sm text-black/60 dark:text-white/80">
               {isAnyLoading && 'Loading repositories...'}
               {(isError || isUserError) && errorMessage}
               {!isAnyLoading && !(isError || isUserError) &&
