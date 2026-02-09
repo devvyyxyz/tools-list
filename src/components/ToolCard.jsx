@@ -9,7 +9,7 @@ const ToolCard = ({ repo, onSelect, onToggleCompare, isCompared }) => {
             href={repo.html_url}
             target="_blank"
             rel="noreferrer"
-            className="flex-1 text-lg font-semibold text-indigo-600 hover:underline"
+            className="flex-1 text-lg font-semibold text-indigo-600 uppercase no-underline"
           >
             {repo.name}
           </a>

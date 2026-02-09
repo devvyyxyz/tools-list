@@ -201,7 +201,7 @@ const Home = () => {
         id: 'templates',
         title: 'Public templates',
         items: templateFiltered,
-        defaultCollapsed: false,
+        defaultCollapsed: true,
       })
     }
 
