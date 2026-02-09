@@ -11,6 +11,7 @@ const ToolModal = ({ repo, languages, contributors, onClose }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          onClick={onClose}
         >
           <motion.div
             className="glass-panel max-h-[80vh] w-full max-w-3xl overflow-y-auto p-6"
@@ -18,6 +19,7 @@ const ToolModal = ({ repo, languages, contributors, onClose }) => {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 40, opacity: 0 }}
             transition={{ duration: 0.2 }}
+            onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-start justify-between gap-6">
               <div>
