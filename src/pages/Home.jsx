@@ -3,10 +3,12 @@ import { MdSearch } from 'react-icons/md'
 import Header from '../components/Header.jsx'
 import Section from '../components/Section.jsx'
 import ToolCard from '../components/ToolCard.jsx'
+import ToolCardSkeleton from '../components/ToolCardSkeleton.jsx'
 import ToolModal from '../components/ToolModal.jsx'
 import SortBar from '../components/SortBar.jsx'
 import ComparisonPanel from '../components/ComparisonPanel.jsx'
 import BackToTop from '../components/BackToTop.jsx'
+import Preloader from '../components/Preloader.jsx'
 import { useStarredRepos } from '../hooks/useStarredRepos.js'
 import { useUserRepos } from '../hooks/useUserRepos.js'
 import { useTemplateRepos } from '../hooks/useTemplateRepos.js'
@@ -50,8 +52,11 @@ const Home = () => {
     error: templateError,
   } = useTemplateRepos()
 
-  const isAnyLoading = isLoading || isUserLoading
-  const errorMessage = (error || userError)?.message
+  const isAnyLoading = isLoading || isUserLoading || isTemplateLoading
+  const errorMessage = (error || userError || templateError)?.message
+  const hasData = Boolean(starredData || userReposData || templateReposData)
+  const showPreloader = isAnyLoading && !hasData
+  const showSkeleton = isAnyLoading && !hasData
 
   const { data: languages = {} } = useRepoLanguages({
     owner: selectedRepo?.owner?.login,
@@ -238,6 +243,7 @@ const Home = () => {
 
   return (
     <div className="min-h-screen">
+      {showPreloader && <Preloader label="Loading your GitHub tools…" />}
       <Header
         title="Toolbox"
         subtitle="A curated view of your starred GitHub repositories."
@@ -278,7 +284,19 @@ const Home = () => {
           <ComparisonPanel items={comparison} onRemove={handleRemoveCompare} />
         )}
 
-        {sections.filter((section) => section.items.length > 0).length === 0 && (
+        {showSkeleton && (
+          <section className="space-y-4">
+            <div className="skeleton h-14 w-full rounded-2xl" />
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <ToolCardSkeleton key={`skeleton-${index}`} />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {!showSkeleton &&
+          sections.filter((section) => section.items.length > 0).length === 0 && (
           <div className="flex flex-col items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 py-12 text-center dark:border-slate-800 dark:bg-slate-900">
             <MdSearch className="text-4xl text-slate-400" />
             <div>
@@ -292,26 +310,27 @@ const Home = () => {
           </div>
         )}
 
-        {sections
-          .filter((section) => section.items.length > 0)
-          .map((section) => (
-          <Section
-            key={section.id}
-            title={section.title}
-            count={section.items.length}
-            defaultCollapsed={section.defaultCollapsed}
-          >
-            {section.items.map((repo) => (
-              <ToolCard
-                key={repo.id}
-                repo={repo}
-                onSelect={setSelectedRepo}
-                onToggleCompare={handleToggleCompare}
-                isCompared={comparison.some((item) => item.id === repo.id)}
-              />
+        {!showSkeleton &&
+          sections
+            .filter((section) => section.items.length > 0)
+            .map((section) => (
+              <Section
+                key={section.id}
+                title={section.title}
+                count={section.items.length}
+                defaultCollapsed={section.defaultCollapsed}
+              >
+                {section.items.map((repo) => (
+                  <ToolCard
+                    key={repo.id}
+                    repo={repo}
+                    onSelect={setSelectedRepo}
+                    onToggleCompare={handleToggleCompare}
+                    isCompared={comparison.some((item) => item.id === repo.id)}
+                  />
+                ))}
+              </Section>
             ))}
-          </Section>
-        ))}
       </main>
 
       <ToolModal
