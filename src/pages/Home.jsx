@@ -356,8 +356,8 @@ const Home = () => {
     <div className="min-h-screen">
       {showPreloader && <Preloader label="Loading your GitHub tools…" />}
       <Header
-        title="Toolbox"
-        subtitle="A curated view of your starred GitHub repositories."
+        title="Tools"
+        subtitle="A comprehensive collection of your development tools and resources."
         searchValue={search}
         onSearchChange={setSearch}
         tags={tags}
@@ -369,7 +369,7 @@ const Home = () => {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h2 className="text-xl font-bold text-white/80">
-              Starred tools
+              Available tools
             </h2>
             <p className="text-sm text-white/80">
               {isAnyLoading && 'Loading repositories...'}
@@ -439,6 +439,7 @@ const Home = () => {
                       <SubSection
                         key={tagSection.id}
                         title={tagSection.title}
+                        count={tagSection.items.length}
                         defaultCollapsed={false}
                       >
                         {tagSection.items.map((repo) => (
@@ -455,6 +456,7 @@ const Home = () => {
                     {section.remainingItems.length > 0 && (
                       <SubSection
                         title="Other"
+                        count={section.remainingItems.length}
                         defaultCollapsed={false}
                       >
                         {section.remainingItems.map((repo) => (
