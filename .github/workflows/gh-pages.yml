@@ -43,5 +43,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
           publish_branch: gh-pages
+          clean: true
+          single_commit: true
           user_name: github-actions
           user_email: github-actions@github.com
