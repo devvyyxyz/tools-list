@@ -193,7 +193,11 @@ const Home = () => {
     return tagSectionDefinitions
       .map((section) => ({
         ...section,
-        items: filterByTags(filteredRepos, section.tags),
+        // Match if a repo has ANY of the section tags (OR),
+        // because sections list alternative tags like "ai,ml".
+        items: filteredRepos.filter((repo) =>
+          (repo.topics || []).some((t) => section.tags.includes(t)),
+        ),
         showCount: false,
       }))
       .filter((section) => section.items.length > 0)
@@ -429,7 +433,8 @@ const Home = () => {
                 key={section.id}
                 title={section.title}
                 count={section.items.length}
-                defaultCollapsed={section.defaultCollapsed}
+                // Default to collapsed unless explicitly set to false
+                defaultCollapsed={section.defaultCollapsed ?? true}
                 showCount={section.showCount !== false}
                 isNested={section.isNested}
               >
@@ -440,7 +445,8 @@ const Home = () => {
                         key={tagSection.id}
                         title={tagSection.title}
                         count={tagSection.items.length}
-                        defaultCollapsed={false}
+                        // collapse tag subsections by default
+                        defaultCollapsed={tagSection.defaultCollapsed ?? true}
                       >
                         {tagSection.items.map((repo) => (
                           <ToolCard
@@ -457,6 +463,7 @@ const Home = () => {
                       <SubSection
                         title="Other"
                         count={section.remainingItems.length}
+                        // keep "Other" expanded by default
                         defaultCollapsed={false}
                       >
                         {section.remainingItems.map((repo) => (
