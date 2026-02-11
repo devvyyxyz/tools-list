@@ -25,8 +25,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
-        run: npm run build
+      - name: Build (use relative base so assets are resolved correctly on custom domains)
+        env:
+          VITE_BASE_PATH: ./
+        run: VITE_BASE_PATH=./ npm run build
 
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
