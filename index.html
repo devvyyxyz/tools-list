@@ -2,6 +2,22 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      (function () {
+        // Run as early as possible to prevent the browser requesting
+        // assets under a stale '/tools-list/' prefix when served on a custom domain.
+        try {
+          var ghHost = 'devvyyxyz.github.io';
+          var p = location.pathname || '/';
+          if (location.hostname !== ghHost && p.indexOf('/tools-list/') === 0) {
+            var newPath = p.replace(/^\/tools-list/, '') || '/';
+            location.replace(location.origin + newPath + location.search + location.hash);
+          }
+        } catch (e) {
+          /* ignore */
+        }
+      })();
+    </script>
     <!-- Vite will replace %BASE_URL% with the configured base at build time -->
     <base href="%BASE_URL%">
     <link rel="icon" type="image/x-icon" href="%BASE_URL%logo.ico" />
