@@ -25,17 +25,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build (choose base based on presence of public/CNAME)
-        run: |
-          if [ -f public/CNAME ]; then
-            echo "Detected public/CNAME — building for custom domain (relative base './')"
-            VBP=./
-          else
-            echo "No CNAME — building for GitHub project pages ('/tools-list/')"
-            VBP=/tools-list/
-          fi
-          echo "VITE_BASE_PATH=$VBP"
-          VITE_BASE_PATH=$VBP npm run build
+      - name: Build (always use relative base so published site works for both custom domains and project pages)
+        env:
+          VITE_BASE_PATH: ./
+        run: VITE_BASE_PATH=./ npm run build
 
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
