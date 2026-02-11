@@ -4,6 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "homepage": "https://devvyyxyz.github.io/tools-list",
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
