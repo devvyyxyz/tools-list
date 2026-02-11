@@ -4,14 +4,21 @@
     <meta charset="UTF-8" />
     <script>
       (function () {
-        // Run as early as possible to prevent the browser requesting
-        // assets under a stale '/tools-list/' prefix when served on a custom domain.
+        // If the user came from a GitHub Pages URL (referrer contains github.io)
+        // and the current path starts with the same first path segment, strip
+        // that segment. This avoids hardcoding any repository slug.
         try {
-          var ghHost = 'devvyyxyz.github.io';
-          var p = location.pathname || '/';
-          if (location.hostname !== ghHost && p.indexOf('/tools-list/') === 0) {
-            var newPath = p.replace(/^\/tools-list/, '') || '/';
-            location.replace(location.origin + newPath + location.search + location.hash);
+          var ref = document.referrer;
+          if (ref) {
+            var refUrl = new URL(ref);
+            if (refUrl.hostname.endsWith('github.io')) {
+              var seg = refUrl.pathname.split('/').filter(Boolean)[0];
+              var p = location.pathname || '/';
+              if (seg && p.indexOf('/' + seg + '/') === 0) {
+                var newPath = p.replace(new RegExp('^/' + seg), '') || '/';
+                location.replace(location.origin + newPath + location.search + location.hash);
+              }
+            }
           }
         } catch (e) {
           /* ignore */
@@ -30,7 +37,7 @@
     />
     <meta name="theme-color" content="#0f172a" />
 
-    <meta property="og:title" content="tools-list" />
+    <meta property="og:title" content="Tools List" />
     <meta
       property="og:description"
       content="Explore and compare developer tools, repos, and templates in one place."
@@ -39,36 +46,19 @@
     <meta property="og:image" content="/logo.ico" />
 
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content="tools-list" />
+    <meta name="twitter:title" content="Tools List" />
     <meta
       name="twitter:description"
       content="Explore and compare developer tools, repos, and templates in one place."
     />
     <meta name="twitter:image" content="/logo.ico" />
 
-    <title>tools-list</title>
+    <title>Tools List</title>
     <!-- Removed external script that hijacks domain to the user profile pages -->
   </head>
   <body>
     <div id="root"></div>
-    <script>
-      (function () {
-        // If the site is served on a custom domain but the path contains
-        // the old project subpath ("/tools-list/"), remove it and reload.
-        // This handles the case where visiting the old GitHub Pages URL
-        // redirects to the custom domain while preserving the path.
-        try {
-          var ghHost = 'devvyyxyz.github.io';
-          var p = location.pathname || '/';
-          if (location.hostname !== ghHost && p.indexOf('/tools-list/') === 0) {
-            var newPath = p.replace(/^\/tools-list/, '') || '/';
-            location.replace(location.origin + newPath + location.search + location.hash);
-          }
-        } catch (e) {
-          /* ignore */
-        }
-      })();
-    </script>
+    <!-- redirect handled in head script to avoid hardcoding repo slug -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

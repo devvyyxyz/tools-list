@@ -3,9 +3,9 @@ import { MdBugReport, MdCode } from 'react-icons/md'
 
 const Footer = () => {
   const currentYear = new Date().getFullYear()
-  const repoUrl = 'https://github.com/devvyyxyz/tools-list'
-  const issuesUrl = `${repoUrl}/issues`
   const profileUrl = 'https://github.com/devvyyxyz'
+  const repoUrl = profileUrl
+  const issuesUrl = `${profileUrl}/issues`
 
   return (
     <footer className="border-t border-white/10 bg-black/50 backdrop-blur">
