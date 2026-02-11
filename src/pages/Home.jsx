@@ -236,6 +236,8 @@ const Home = () => {
           id: 'all-repos',
           title: 'All repositories',
           items: combined,
+          // keep the combined "All repositories" open by default
+          defaultCollapsed: false,
         },
       ]
     }
@@ -255,6 +257,8 @@ const Home = () => {
         id: 'all-starred',
         title: 'All repositories',
         items: filteredRepos,
+        // ensure the top "All repositories" section is open by default
+        defaultCollapsed: false,
         isNested: true,
         nestedSections: tagSections,
         remainingItems: remainingRepos,
