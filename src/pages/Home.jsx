@@ -169,6 +169,7 @@ const Home = () => {
           .split(',')
           .map((tag) => tag.trim())
           .filter(Boolean)
+        const normalizedTags = tagsValue.map((t) => t.toLowerCase())
 
         if (!tagsValue.length) return null
 
@@ -183,11 +184,32 @@ const Home = () => {
         return {
           id: `tag-${tagsValue.join('-')}`,
           title: titleValue || tagsValue.join(', '),
-          tags: tagsValue,
+          tags: normalizedTags,
         }
       })
       .filter(Boolean)
   }, [tags])
+
+  const tagColors = useMemo(() => {
+    const palette = [
+      '#7c3aed', // indigo/violet
+      '#06b6d4', // cyan
+      '#f97316', // orange
+      '#10b981', // green
+      '#ef4444', // red
+      '#f59e0b', // amber
+      '#6366f1', // purple
+      '#db2777', // pink
+    ]
+    const map = {}
+    tagSectionDefinitions.forEach((section, idx) => {
+      const color = palette[idx % palette.length]
+      ;(section.tags || []).forEach((t) => {
+        map[t] = color
+      })
+    })
+    return map
+  }, [tagSectionDefinitions])
 
   const tagSections = useMemo(() => {
     return tagSectionDefinitions
@@ -196,7 +218,7 @@ const Home = () => {
         // Match if a repo has ANY of the section tags (OR),
         // because sections list alternative tags like "ai,ml".
         items: filteredRepos.filter((repo) =>
-          (repo.topics || []).some((t) => section.tags.includes(t)),
+          (repo.topics || []).map((t) => String(t).toLowerCase()).some((t) => section.tags.includes(t)),
         ),
         showCount: false,
       }))
@@ -365,6 +387,7 @@ const Home = () => {
         searchValue={search}
         onSearchChange={setSearch}
         tags={tags}
+        tagColors={tagColors}
         activeTags={activeTags}
         onToggleTag={handleToggleTag}
       />

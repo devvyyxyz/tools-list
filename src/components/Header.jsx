@@ -7,6 +7,7 @@ const Header = ({
   searchValue,
   onSearchChange,
   tags,
+  tagColors,
   activeTags,
   onToggleTag,
 }) => {
@@ -38,6 +39,7 @@ const Header = ({
             tags={tags}
             activeTags={activeTags}
             onToggleTag={onToggleTag}
+            tagColors={tagColors}
           />
         </div>
       </div>
