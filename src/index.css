@@ -80,3 +80,21 @@ body {
     transform: rotate(360deg);
   }
 }
+
+@keyframes slideInFromRight {
+  from { transform: translateX(20%); opacity: 0 }
+  to { transform: translateX(0); opacity: 1 }
+}
+
+@keyframes slideInFromLeft {
+  from { transform: translateX(-20%); opacity: 0 }
+  to { transform: translateX(0); opacity: 1 }
+}
+
+.slide-in-right {
+  animation: slideInFromRight 320ms cubic-bezier(.2,.9,.2,1) both;
+}
+
+.slide-in-left {
+  animation: slideInFromLeft 320ms cubic-bezier(.2,.9,.2,1) both;
+}

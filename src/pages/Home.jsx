@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useEffect, useRef } from 'react'
 import { MdSearch } from 'react-icons/md'
 import Header from '../components/Header.jsx'
 import Section from '../components/Section.jsx'
@@ -32,6 +32,18 @@ const Home = () => {
   const [selectedRepo, setSelectedRepo] = useState(null)
   const [comparison, setComparison] = useState([])
   const [activeSection, setActiveSection] = useState(0)
+  const [slideClass, setSlideClass] = useState('')
+  const prevSectionRef = useRef(activeSection)
+
+  useEffect(() => {
+    const prev = prevSectionRef.current
+    if (activeSection === prev) return
+    const cls = activeSection > prev ? 'slide-in-right' : 'slide-in-left'
+    setSlideClass(cls)
+    prevSectionRef.current = activeSection
+    const t = setTimeout(() => setSlideClass(''), 360)
+    return () => clearTimeout(t)
+  }, [activeSection])
 
   const {
     data: starredData,
@@ -498,6 +510,7 @@ const Home = () => {
               </div>
 
               <div className="pt-4">
+                <div className={slideClass}>
                 <Section
                   key={current.id}
                   title={current.title}
@@ -555,6 +568,7 @@ const Home = () => {
                     ))
                   )}
                 </Section>
+                </div>
               </div>
             </>
           )
