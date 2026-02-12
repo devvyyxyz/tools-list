@@ -37,7 +37,9 @@ jobs:
           VITE_GITHUB_TOKEN: ${{ secrets.VITE_GITHUB_TOKEN }}
           VITE_GITHUB_API_BASE: ${{ secrets.VITE_GITHUB_API_BASE || 'https://api.github.com' }}
           VITE_GITHUB_GRAPHQL: ${{ secrets.VITE_GITHUB_GRAPHQL || 'https://api.github.com/graphql' }}
-          VITE_BASE_PATH: /${{ github.event.repository.name }}/
+          # Use a relative base so the built assets resolve correctly
+          # for both custom domains (CNAME) and project pages.
+          VITE_BASE_PATH: ./
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
