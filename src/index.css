@@ -98,3 +98,17 @@ body {
 .slide-in-left {
   animation: slideInFromLeft 320ms cubic-bezier(.2,.9,.2,1) both;
 }
+
+/* Subsection dropdown animation */
+.subsection-content {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: max-height 320ms cubic-bezier(.2,.9,.2,1), opacity 220ms ease, transform 220ms ease;
+}
+.subsection-content.open {
+  max-height: 2000px;
+  opacity: 1;
+  transform: translateY(0);
+}

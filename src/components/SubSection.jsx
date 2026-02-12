@@ -21,9 +21,9 @@ const SubSection = ({ title, count, children, defaultCollapsed = false }) => {
           )}
         </span>
       </button>
-      {!collapsed && <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <div className={`subsection-content grid gap-4 md:grid-cols-2 xl:grid-cols-3 ${collapsed ? '' : 'open'}`}>
         {children}
-      </div>}
+      </div>
     </div>
   )
 }
