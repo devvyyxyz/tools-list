@@ -202,14 +202,27 @@ const Home = () => {
       '#db2777', // pink
     ]
     const map = {}
-    tagSectionDefinitions.forEach((section, idx) => {
-      const color = palette[idx % palette.length]
-      ;(section.tags || []).forEach((t) => {
-        map[t] = color
+
+    // If explicit tag sections are defined via VITE_TAG_SECTIONS, use
+    // those to map colors. Otherwise, fall back to assigning colors to
+    // every discovered tag so the small colored dots appear even when
+    // `VITE_TAG_SECTIONS` isn't set in the deployment environment.
+    if (tagSectionDefinitions && tagSectionDefinitions.length) {
+      tagSectionDefinitions.forEach((section, idx) => {
+        const color = palette[idx % palette.length]
+        ;(section.tags || []).forEach((t) => {
+          map[t] = color
+        })
       })
-    })
+    } else {
+      // `tags` contains the deduplicated list of all repo topics
+      ;(tags || []).forEach((t, idx) => {
+        map[String(t).toLowerCase()] = palette[idx % palette.length]
+      })
+    }
+
     return map
-  }, [tagSectionDefinitions])
+  }, [tagSectionDefinitions, tags])
 
   const tagSections = useMemo(() => {
     return tagSectionDefinitions
