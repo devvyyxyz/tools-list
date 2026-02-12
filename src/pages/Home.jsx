@@ -31,6 +31,7 @@ const Home = () => {
   const [groupByStatus, setGroupByStatus] = useState(true)
   const [selectedRepo, setSelectedRepo] = useState(null)
   const [comparison, setComparison] = useState([])
+  const [activeSection, setActiveSection] = useState(0)
 
   const {
     data: starredData,
@@ -465,72 +466,99 @@ const Home = () => {
           </div>
         )}
 
-        {!showSkeleton &&
-          sections
-            .filter((section) => section.items.length > 0)
-            .map((section) => (
-              <Section
-                key={section.id}
-                title={section.title}
-                count={section.items.length}
-                // Default to collapsed unless explicitly set to false
-                defaultCollapsed={section.defaultCollapsed ?? true}
-                showCount={section.showCount !== false}
-                isNested={section.isNested}
-              >
-                {section.isNested ? (
-                  <>
-                    {section.nestedSections.map((tagSection) => (
-                      <SubSection
-                        key={tagSection.id}
-                        title={tagSection.title}
-                        count={tagSection.items.length}
-                        // collapse tag subsections by default
-                        defaultCollapsed={tagSection.defaultCollapsed ?? true}
-                      >
-                        {tagSection.items.map((repo) => (
-                          <ToolCard
-                            key={repo.id}
-                            repo={repo}
-                            onSelect={setSelectedRepo}
-                            onToggleCompare={handleToggleCompare}
-                            isCompared={comparison.some((item) => item.id === repo.id)}
-                          />
-                        ))}
-                      </SubSection>
-                    ))}
-                    {section.remainingItems.length > 0 && (
-                      <SubSection
-                        title="Other"
-                        count={section.remainingItems.length}
-                        // keep "Other" expanded by default
-                        defaultCollapsed={false}
-                      >
-                        {section.remainingItems.map((repo) => (
-                          <ToolCard
-                            key={repo.id}
-                            repo={repo}
-                            onSelect={setSelectedRepo}
-                            onToggleCompare={handleToggleCompare}
-                            isCompared={comparison.some((item) => item.id === repo.id)}
-                          />
-                        ))}
-                      </SubSection>
-                    )}
-                  </>
-                ) : (
-                  section.items.map((repo) => (
-                    <ToolCard
-                      key={repo.id}
-                      repo={repo}
-                      onSelect={setSelectedRepo}
-                      onToggleCompare={handleToggleCompare}
-                      isCompared={comparison.some((item) => item.id === repo.id)}
-                    />
-                  ))
-                )}
-              </Section>
-            ))}
+        {!showSkeleton && (() => {
+          const visible = sections.filter((section) => section.items.length > 0)
+          if (!visible.length) return null
+
+          // Clamp activeSection
+          const idx = Math.min(activeSection, visible.length - 1)
+          const current = visible[idx]
+
+          return (
+            <>
+              {/* Top-level tabs for sections */}
+              <div className="flex flex-wrap gap-2">
+                {visible.map((s, i) => (
+                  <button
+                    key={s.id}
+                    type="button"
+                    onClick={() => setActiveSection(i)}
+                    className={`rounded-full px-4 py-2 text-sm font-semibold transition flex items-center gap-3 ${
+                      i === idx
+                        ? 'bg-indigo-600 text-white border-2 border-indigo-600'
+                        : 'bg-white/0 text-white border-2 border-slate-200 hover:border-indigo-300 dark:border-white/10'
+                    }`}
+                  >
+                    <span>{s.title}</span>
+                    <span className="inline-flex items-center justify-center rounded-full bg-white/10 px-2 py-0.5 text-xs font-medium text-white/90">
+                      {s.items.length}
+                    </span>
+                  </button>
+                ))}
+              </div>
+
+              <div className="pt-4">
+                <Section
+                  key={current.id}
+                  title={current.title}
+                  count={current.items.length}
+                  showCount={current.showCount !== false}
+                  isNested={current.isNested}
+                >
+                  {current.isNested ? (
+                    <>
+                      {current.nestedSections.map((tagSection) => (
+                        <SubSection
+                          key={tagSection.id}
+                          title={tagSection.title}
+                          count={tagSection.items.length}
+                          defaultCollapsed={tagSection.defaultCollapsed ?? true}
+                        >
+                          {tagSection.items.map((repo) => (
+                            <ToolCard
+                              key={repo.id}
+                              repo={repo}
+                              onSelect={setSelectedRepo}
+                              onToggleCompare={handleToggleCompare}
+                              isCompared={comparison.some((item) => item.id === repo.id)}
+                            />
+                          ))}
+                        </SubSection>
+                      ))}
+                      {current.remainingItems && current.remainingItems.length > 0 && (
+                        <SubSection
+                          title="Other"
+                          count={current.remainingItems.length}
+                          defaultCollapsed={false}
+                        >
+                          {current.remainingItems.map((repo) => (
+                            <ToolCard
+                              key={repo.id}
+                              repo={repo}
+                              onSelect={setSelectedRepo}
+                              onToggleCompare={handleToggleCompare}
+                              isCompared={comparison.some((item) => item.id === repo.id)}
+                            />
+                          ))}
+                        </SubSection>
+                      )}
+                    </>
+                  ) : (
+                    current.items.map((repo) => (
+                      <ToolCard
+                        key={repo.id}
+                        repo={repo}
+                        onSelect={setSelectedRepo}
+                        onToggleCompare={handleToggleCompare}
+                        isCompared={comparison.some((item) => item.id === repo.id)}
+                      />
+                    ))
+                  )}
+                </Section>
+              </div>
+            </>
+          )
+        })()}
       </main>
 
       <ToolModal
